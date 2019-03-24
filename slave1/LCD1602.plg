@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+D:\Data\git\Graduation project(teng)\slave1\LCD1602.uvproj
+Project File Date:  03/12/2019
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling 1602.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?CO?1602
+Program Size: data=98.0 xdata=0 code=1277
+creating hex file from "LCD1602"...
+"LCD1602" - 0 Error(s), 3 Warning(s).
+Build target 'Target 1'
+compiling 1602.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?1602
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?CO?1602
+Program Size: data=98.0 xdata=0 code=1277
+creating hex file from "LCD1602"...
+"LCD1602" - 0 Error(s), 3 Warning(s).
