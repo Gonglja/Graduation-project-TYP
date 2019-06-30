@@ -3,6 +3,13 @@
 #define uchar unsigned char
 #define uint unsigned int
 
+//¶¨ÒåÊ¹ÄÜÎ»
+sbit Slave1En = P1^3;
+sbit Slave2En = P1^4;
+
+//sbit SpeakEn1 = P1^5;
+//sbit SpeakEn2 = P1^6;
+//sbit SpeakEn3 = P1^7;
 sbit LCD_RS=P1^2;//¶¨ÒåÒı½Å
 sbit LCD_RW=P1^1;
 sbit LCD_E=P1^0;
@@ -33,16 +40,19 @@ void Txd_Data(char Data);
 void PutString(unsigned char *TXStr); 
 //------------------´®¿ÚÍ¨ĞÅĞ­Òé-----------------//
 /*
-  ¿Í»§¶ËÊı¾İ°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª13):
-  ÀıÈç:A1_T225H32X1#	 	  Éè±¸1µÄÎÂ¶ÈÊÇ22.5	Êª¶ÈÊÇ32 ÑÌÎíÓĞ
+  ¿Í»§¶ËÊı¾İ°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª8):
+  ÀıÈç:A1_T225#	 	  Éè±¸1µÄÎÂ¶ÈÊÇ22.5
   A	    	  -----Êı¾İ°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊı¾İ°ü¿ÉÒÔÓĞ26ÖÖ)
   1		      -----Éè±¸´úºÅ
+  T225        --------Ö¸Áî(³¤¶ÈºãÎª4)£¬Ö¸ÁîµÄÇ°1¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó3¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
+  #           ---------Êı¾İ°üµÄ½áÊø±ê¼Ç
 
-  Ö¸ÁîÖ¸ÁîµÄÇ°1¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºón£¨3¡¢2¡¢1£©¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
-  T225        -----ÎÂ¶ÈÎª22.5
-  H32		  -----Êª¶ÈÊÇ32
-  X1		  -----ÑÌÎíÓĞ£¨ÎŞ£©
-  #           -----Êı¾İ°üµÄ½áÊø±ê¼Ç
+  ·şÎñÆ÷¶ËÊı¾İ°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª15):
+  ÀıÈç:A2_SenT010250#
+  A--------Êı¾İ°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊı¾İ°ü¿ÉÒÔÓĞ26ÖÖ)
+  02-----Éè±¸´úºÅ
+  SenT010250--------Ö¸Áî(³¤¶ÈºãÎª10)£¬Ö¸ÁîµÄÇ°4¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó6¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
+  #---------Êı¾İ°üµÄ½áÊø±ê¼Ç
 */
 #define DataPacketLength 13
 uchar buf_string[DataPacketLength];  //¶¨ÒåÊı¾İ°ü³¤¶ÈÎª8¸ö×Ö·û
@@ -58,56 +68,65 @@ uchar slave2_hum_disp[3]={'H','X','X'};
 uchar slave1_s_disp[2]={'S','X'};
 uchar slave2_s_disp[2]={'S','X'};
 
-uchar code disp1[]={"Î»ÖÃ01µÄ¼à¿ØÈçÏÂ"};
+//uchar code disp1[]={"Î»ÖÃ01µÄ¼à¿ØÈçÏÂ"};
+//uchar code disp2[]={"Î»ÖÃ02µÄ¼à¿ØÈçÏÂ"};
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 void main(void)
 {
-	Delay400Ms(); //Æô¶¯µÈ´ı£¬µÈLCD½²Èë¹¤×÷×´Ì¬
+	//Delay400Ms(); //Æô¶¯µÈ´ı£¬µÈLCD½²Èë¹¤×÷×´Ì¬
 	LCDInit(); //LCM³õÊ¼»¯
 	Delay5Ms(); //ÑÓÊ±Æ¬¿Ì(¿É²»Òª)
 	UartInit();
+	Slave1En=1;
+	Slave2En=0;
+
  	while(1)
 	{
- 		//LCDClear();
-		//DisplayImage(tmp);//ÏÔÊ¾Í¼ĞÎ
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//LCDClear();
-		//DisplayListChar(0,1,uctech);	//ÏÔÊ¾×Ö¿âÖĞµÄÖĞÎÄÊı×Ö
- 		//DisplayListChar(0,2,net);		//ÏÔÊ¾×Ö¿âÖĞµÄÖĞÎÄÊı×Ö
-		//DisplayListChar(0,3,temp_disp);		//ÏÔÊ¾×Ö¿âÖĞµÄÖĞÎÄ
-		//DisplayListChar(0,4,qqDisplayListChar(0,4,qq);		//ÏÔÊ¾×Ö¿âÖĞµÄÖĞÎÄÊı×Ö
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
- 		//LCDFlash();	//ÉÁË¸Ğ§¹û
-		//}
-		DisplayListChar(0,0,disp1);
-		DisplayOneChar(0,2,slave1_temp_disp[0]);
-		DisplayOneChar(1,2,slave1_temp_disp[1]);
-		DisplayOneChar(2,2,slave1_temp_disp[2]);
-		DisplayOneChar(3,2,slave1_temp_disp[3]);
-		DisplayOneChar(4,2,slave1_hum_disp[0]);
-		DisplayOneChar(5,2,slave1_hum_disp[1]);
-		DisplayOneChar(6,2,slave1_s_disp[0]);
-		DisplayOneChar(7,2,slave1_s_disp[1]);
 
-		DisplayOneChar(0,3,slave2_temp_disp[0]);
-		DisplayOneChar(1,3,slave2_temp_disp[1]);
-		DisplayOneChar(2,3,slave2_temp_disp[2]);
-		DisplayOneChar(3,3,slave2_temp_disp[3]);
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//Delay400Ms();
-		//PutString(DataPackage);//¿Õ¸ñ20H,»Ø³µ0DH
+		WriteCommandLCD(0x80);	   //80 90 88 98
+		WriteDataLCD(0x31);
+		WriteCommandLCD(0x90);	   //80 90 88 98
+		WriteDataLCD(slave1_temp_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave1_temp_disp[1]);
+		WriteDataLCD(slave1_temp_disp[2]);
+		WriteDataLCD('.');
+		WriteDataLCD(slave1_temp_disp[3]);
+
+
+		WriteDataLCD(' ');
+		WriteDataLCD(slave1_hum_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave1_hum_disp[1]);
+		WriteDataLCD(slave1_hum_disp[2]);
+		WriteDataLCD(' ');
+		WriteDataLCD(slave1_s_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave1_s_disp[1]);
+
 		
+		//DisplayListChar(0,3,disp2);
+		WriteCommandLCD(0x88);	   //80 90 88 98
+		WriteDataLCD(0x32);
+		WriteCommandLCD(0x98);	   //80 90 88 98
+		WriteDataLCD(slave2_temp_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave2_temp_disp[1]);
+		WriteDataLCD(slave2_temp_disp[2]);
+		WriteDataLCD('.');
+		WriteDataLCD(slave2_temp_disp[3]);
+		WriteDataLCD(' ');
+		WriteDataLCD(slave2_hum_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave2_hum_disp[1]);
+		WriteDataLCD(slave2_hum_disp[2]);
+		WriteDataLCD(' ');
+		WriteDataLCD(slave2_s_disp[0]);
+		WriteDataLCD(':');
+		WriteDataLCD(slave2_s_disp[1]);
+
 	}
 }
 
@@ -278,16 +297,37 @@ void UartInit()
 	SCON=0x50;   //´®¿Ú·½Ê½1£¬Ê¹ÄÜ½ÓÊÕ
 	TMOD=0x20;  //¶¨Ê±Æ÷1¹¤×÷·½Ê½2£¨8Î»×Ô¶¯ÖØ×°³õÖµ£©
 	
-	TH1=0xfa;    //¼ÆÊıÆ÷³õÊ¼ÖµÉèÖÃ 9600bps
+	TH1=0xfd;    //¼ÆÊıÆ÷³õÊ¼ÖµÉèÖÃ 9600bps
 	TL1=0xfa;  
-	PCON|=0x80;  //¶¨ÒåPCON¼Ä´æÆ÷ÖĞµÄSMOD=1,²¨ÌØÂÊ¼Ó±¶
-	
+	//PCON|=0x80;  //¶¨ÒåPCON¼Ä´æÆ÷ÖĞµÄSMOD=1,²¨ÌØÂÊ¼Ó±¶
+	SM0=0;
+	SM1=1;
+
 	TR1=1;
 	TI=0;
 	RI=0;
 	//PS=1;   //Ìá¸ß´®¿ÚÖĞ¶ÏÓÅÏÈ¼¶
 	ES=1;  //¿ªÆô´®¿ÚÖĞ¶ÏÊ¹ÄÜ
 	EA=1;
+//    SCON=0x50; //´®¿Ú¹¤×÷·½Ê½1£¬8Î»UART£¬²¨ÌØÂÊ¿É±ä  
+//	TH2=0xFF;           
+//	TL2=0xFD;    //²¨ÌØÂÊ:115200 ¾§Õñ=11.0592MHz 
+//	RCAP2H=0xFF;   
+//	RCAP2L=0xFD; //16Î»×Ô¶¯ÔÙ×°ÈëÖµ
+//	
+//	TCLK=1;   
+//	RCLK=1;   
+//	C_T2=0;   
+//	EXEN2=0; //²¨ÌØÂÊ·¢ÉúÆ÷¹¤×÷·½Ê½
+//
+//    TR2=1 ; //¶¨Ê±Æ÷2¿ªÊ¼            //
+//    TI = 1;
+//
+//    REN=1;       //Ê¹ÄÜ´®¿ÚÔÊĞí½ÓÊÕ
+//    SM0=0;      //¹¤×÷ÔÚ´®¿ÚµÄ¹¤×÷·½Ê½1
+//    SM1=1;
+//    ES=1;       //´®¿ÚÖĞ¶Ï¹Ø±Õ£¬´ı³õÊ¼»¯ºóÔÙ´ò¿ª
+//    EA=1;       //×ÜÖĞ¶Ï´ò¿ª  
 }
 //
 //void Txd_Data(char Data)    //´®¿Ú·¢ËÍÊı¾İ
@@ -298,18 +338,18 @@ void UartInit()
 //}
 
 //´®¿Ú·¢ËÍº¯Êı
-void PutString(unsigned char *TXStr)  
-{                
-    ES=0;     
-    while(*TXStr!=0) 
-    {                      
-        SBUF=*TXStr;
-        while(TI==0);
-        TI=0;    
-        TXStr++;
-    }
-    ES=1; 
-}                                                     
+//void PutString(unsigned char *TXStr)  
+//{                
+//    ES=0;     
+//    while(*TXStr!=0) 
+//    {                      
+//        SBUF=*TXStr;
+//        while(TI==0);
+//        TI=0;    
+//        TXStr++;
+//    }
+//    ES=1; 
+//}                                                     
 //´®¿Ú½ÓÊÕº¯Êı
 bit ReceiveString()    
 {
@@ -324,10 +364,10 @@ bit ReceiveString()
 	    {
 	        num++;
 	        RecStr++;    
-	        while(!RI)
+	        while(!RI);
 	        {
-	            count++;
-	            if(count>130)return 0;    //½ÓÊÕÊı¾İµÈ´ıÑÓ³Ù£¬µÈ´ıÊ±¼äÌ«¾Ã»áµ¼ÖÂCPUÔËËãÏĞÖÃ£¬Ì«¶Ì»á³öÏÖ"Êı¾İ°ü±»·Ö¸î",Ä¬ÈÏcount=130
+	           count++;
+	           if(count>130)return 0;    //½ÓÊÕÊı¾İµÈ´ıÑÓ³Ù£¬µÈ´ıÊ±¼äÌ«¾Ã»áµ¼ÖÂCPUÔËËãÏĞÖÃ£¬Ì«¶Ì»á³öÏÖ"Êı¾İ°ü±»·Ö¸î",Ä¬ÈÏcount=130
 	        }
 	        goto loop;
 	    }
@@ -368,6 +408,7 @@ bit Deal_UART_RecData()   //´¦Àí´®¿Ú½ÓÊÕÊı¾İ°üº¯Êı£¨³É¹¦´¦ÀíÊı¾İ°üÔò·µ»Ø1£¬·ñÔò·
          switch(buf_string[1])        //Ê¶±ğ·¢ËÍÕßÉè±¸IDµÄµÚ1Î»Êı×Ö
          {
              case '1':
+			 	{
                  switch(buf_string[2])        //Ê¶±ğ·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êı×Ö
                  {
                      case '_':
@@ -389,43 +430,44 @@ bit Deal_UART_RecData()   //´¦Àí´®¿Ú½ÓÊÕÊı¾İ°üº¯Êı£¨³É¹¦´¦ÀíÊı¾İ°üÔò·µ»Ø1£¬·ñÔò·
                              slave1_s_disp[1]= buf_string[11]; 
                              
                          }
+						 Slave1En=0;
+				         Slave2En=1;
                          return 0;
-                     
                      default:
                          return 0;
                  }
-
+				 
+				 }
 			 case '2':
+			 {
                  switch(buf_string[2])        //Ê¶±ğ·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êı×Ö
                  {
                      case '_':
                          if(buf_string[3]=='T')    //ÅĞ¶ÏÖ¸ÁîÍ·²¿ÊÇ·ñÎª'T'
                          {
-                         	 //temp =  buf_string[4]*100+buf_string[5]*10+buf_string[6]; 
                          	slave2_temp_disp[1]=buf_string[4];
 							slave2_temp_disp[2]=buf_string[5];
 							slave2_temp_disp[3]=buf_string[6];
 						 }
-                         if(buf_string[3]=='H')  
+                         if(buf_string[7]=='H')  
                          {
-                                         
+                             slave2_hum_disp[1]= buf_string[8]; 
+							 slave2_hum_disp[2]= buf_string[9];             
                              
                          }
-                         if(buf_string[3]=='Q')  
+                         if(buf_string[10]=='S')  
                          {
-                             
-                             
+                            slave2_s_disp[1]= buf_string[11];  
                          }
-                         if(buf_string[3]=='W')  
-                         {
-                             
-                             
-                         }
+						 Slave1En=1;
+				         Slave2En=0;
                          return 0;
                      
                      default:
                          return 0;
                  }
+				  
+			}	  
              default:
                  return 0;
          }

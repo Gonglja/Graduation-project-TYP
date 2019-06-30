@@ -1,4 +1,4 @@
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 1   
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 1   
 
 
 C51 COMPILER V9.00, COMPILATION OF MODULE DEMO
@@ -12,475 +12,520 @@ line level    source
    3          #define uchar unsigned char
    4          #define uint unsigned int
    5          
-   6          sbit LCD_RS=P1^2;//¶¨ÒåÒý½Å
-   7          sbit LCD_RW=P1^1;
-   8          sbit LCD_E=P1^0;
-   9          //sbit PSB =P3^6;               //PSB½ÅÎª12864-12ÏµÁÐµÄ´®¡¢²¢Í¨Ñ¶¹¦ÄÜÇÐ»»£¬ÎÒÃÇÊ¹ÓÃ8Î»²¢ÐÐ½Ó¿Ú£¬PSB=1
-  10          #define LCD_Data P2
-  11          
-  12          
-  13          
-  14          #define Busy    0x80 //ÓÃÓÚ¼ì²âLCD×´Ì¬×ÖÖÐµÄBusy±êÊ¶
-  15          void WriteDataLCD(unsigned char WDLCD);
-  16          void WriteCommandLCD(unsigned char WCLCD,BuysC);
-  17          unsigned char ReadDataLCD(void);
-  18          unsigned char ReadStatusLCD(void);
-  19          void LCDInit(void);
-  20          void LCDClear(void);
-  21          void LCDFlash(void);
-  22          void DisplayOneChar(unsigned char X, unsigned char Y, unsigned char DData);
-  23          void DisplayListChar(unsigned char X, unsigned char Y, unsigned char code *DData);
-  24          //void DisplayImage (unsigned char code *DData);
-  25          void Delay5Ms(void);
-  26          void Delay400Ms(void);
-  27          
-  28          /////////////////////////´®¿Ú²¿·Ö///////////////
-  29          uchar Uart_flag=0,recData=0;
-  30          
-  31          void UartInit(void);
-  32          void Txd_Data(char Data);
-  33          void PutString(unsigned char *TXStr); 
-  34          //------------------´®¿ÚÍ¨ÐÅÐ­Òé-----------------//
-  35          /*
-  36            ¿Í»§¶ËÊý¾Ý°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª8):
-  37            ÀýÈç:A1_T225#           Éè±¸1µÄÎÂ¶ÈÊÇ22.5
-  38            A               -----Êý¾Ý°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊý¾Ý°ü¿ÉÒÔÓÐ26ÖÖ)
-  39            1                   -----Éè±¸´úºÅ
-  40            T225        --------Ö¸Áî(³¤¶ÈºãÎª4)£¬Ö¸ÁîµÄÇ°1¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó3¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
-  41            #           ---------Êý¾Ý°üµÄ½áÊø±ê¼Ç
-  42          
-  43            ·þÎñÆ÷¶ËÊý¾Ý°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª15):
-  44            ÀýÈç:A2_SenT010250#
-  45            A--------Êý¾Ý°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊý¾Ý°ü¿ÉÒÔÓÐ26ÖÖ)
-  46            02-----Éè±¸´úºÅ
-  47            SenT010250--------Ö¸Áî(³¤¶ÈºãÎª10)£¬Ö¸ÁîµÄÇ°4¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó6¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
-  48            #---------Êý¾Ý°üµÄ½áÊø±ê¼Ç
-  49          */
-  50          #define DataPacketLength 13
-  51          uchar buf_string[DataPacketLength];  //¶¨ÒåÊý¾Ý°ü³¤¶ÈÎª8¸ö×Ö·û
-  52          #define deviceID '0'        //ÓÃÓÚ´®¿ÚÍ¨ÐÅÊ±£¬¶¨Òå±¾µØÉè±¸IDµÄµÚ1Î»
-  53          #define datapackage_headflag 'A' //ÓÃÓÚ´®¿ÚÍ¨ÐÅÊ±£¬¶¨ÒåÊý¾Ý°üÍ·²¿µÄÑéÖ¤±ê¼Ç
-  54          
-  55          uchar DataPackage[DataPacketLength]={datapackage_headflag,deviceID,'_','T','X','X','X','H','X','X','S','X'
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 2   
+   6          //¶¨ÒåÊ¹ÄÜÎ»
+   7          sbit Slave1En = P1^3;
+   8          sbit Slave2En = P1^4;
+   9          
+  10          //sbit SpeakEn1 = P1^5;
+  11          //sbit SpeakEn2 = P1^6;
+  12          //sbit SpeakEn3 = P1^7;
+  13          sbit LCD_RS=P1^2;//¶¨ÒåÒý½Å
+  14          sbit LCD_RW=P1^1;
+  15          sbit LCD_E=P1^0;
+  16          //sbit PSB =P3^6;               //PSB½ÅÎª12864-12ÏµÁÐµÄ´®¡¢²¢Í¨Ñ¶¹¦ÄÜÇÐ»»£¬ÎÒÃÇÊ¹ÓÃ8Î»²¢ÐÐ½Ó¿Ú£¬PSB=1
+  17          #define LCD_Data P2
+  18          
+  19          
+  20          
+  21          #define Busy    0x80 //ÓÃÓÚ¼ì²âLCD×´Ì¬×ÖÖÐµÄBusy±êÊ¶
+  22          void WriteDataLCD(unsigned char WDLCD);
+  23          void WriteCommandLCD(unsigned char WCLCD,BuysC);
+  24          unsigned char ReadDataLCD(void);
+  25          unsigned char ReadStatusLCD(void);
+  26          void LCDInit(void);
+  27          void LCDClear(void);
+  28          void LCDFlash(void);
+  29          void DisplayOneChar(unsigned char X, unsigned char Y, unsigned char DData);
+  30          void DisplayListChar(unsigned char X, unsigned char Y, unsigned char code *DData);
+  31          //void DisplayImage (unsigned char code *DData);
+  32          void Delay5Ms(void);
+  33          void Delay400Ms(void);
+  34          
+  35          /////////////////////////´®¿Ú²¿·Ö///////////////
+  36          uchar Uart_flag=0,recData=0;
+  37          
+  38          void UartInit(void);
+  39          void Txd_Data(char Data);
+  40          void PutString(unsigned char *TXStr); 
+  41          //------------------´®¿ÚÍ¨ÐÅÐ­Òé-----------------//
+  42          /*
+  43            ¿Í»§¶ËÊý¾Ý°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª8):
+  44            ÀýÈç:A1_T225#           Éè±¸1µÄÎÂ¶ÈÊÇ22.5
+  45            A               -----Êý¾Ý°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊý¾Ý°ü¿ÉÒÔÓÐ26ÖÖ)
+  46            1                   -----Éè±¸´úºÅ
+  47            T225        --------Ö¸Áî(³¤¶ÈºãÎª4)£¬Ö¸ÁîµÄÇ°1¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó3¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
+  48            #           ---------Êý¾Ý°üµÄ½áÊø±ê¼Ç
+  49          
+  50            ·þÎñÆ÷¶ËÊý¾Ý°ü¸ñÊ½½âÊÍ(³¤¶ÈºãÎª15):
+  51            ÀýÈç:A2_SenT010250#
+  52            A--------Êý¾Ý°üµÄ¿ªÊ¼±ê¼Ç(¿ÉÒÔÎªAµ½Z,ÒâÎ¶×ÅÊý¾Ý°ü¿ÉÒÔÓÐ26ÖÖ)
+  53            02-----Éè±¸´úºÅ
+  54            SenT010250--------Ö¸Áî(³¤¶ÈºãÎª10)£¬Ö¸ÁîµÄÇ°4¸öÈË×Ö·ûÊÇÖ¸ÁîÍ·²¿£¬Ö¸ÁîµÄºó6¸ö×Ö·ûÊÇÖ¸ÁîÎ²²¿
+  55            #---------Êý¾Ý°üµÄ½áÊø±ê¼Ç
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 2   
 
+  56          */
+  57          #define DataPacketLength 13
+  58          uchar buf_string[DataPacketLength];  //¶¨ÒåÊý¾Ý°ü³¤¶ÈÎª8¸ö×Ö·û
+  59          #define deviceID '0'        //ÓÃÓÚ´®¿ÚÍ¨ÐÅÊ±£¬¶¨Òå±¾µØÉè±¸IDµÄµÚ1Î»
+  60          #define datapackage_headflag 'A' //ÓÃÓÚ´®¿ÚÍ¨ÐÅÊ±£¬¶¨ÒåÊý¾Ý°üÍ·²¿µÄÑéÖ¤±ê¼Ç
+  61          
+  62          uchar DataPackage[DataPacketLength]={datapackage_headflag,deviceID,'_','T','X','X','X','H','X','X','S','X'
              -,'#'};
-  56          
-  57          uchar slave1_temp_disp[4]={'T','X','X','X'};
-  58          uchar slave2_temp_disp[4]={'T','X','X','X'};
-  59          uchar slave1_hum_disp[3]={'H','X','X'};
-  60          uchar slave2_hum_disp[3]={'H','X','X'};
-  61          uchar slave1_s_disp[2]={'S','X'};
-  62          uchar slave2_s_disp[2]={'S','X'};
   63          
-  64          uchar code disp1[]={"Î»ÖÃ01µÄ¼à¿ØÈçÏÂ"};
-  65          
-  66          /////////////////////////////////////////////////////////////////////////////////////////////
-  67          
-  68          void main(void)
-  69          {
-  70   1              Delay400Ms(); //Æô¶¯µÈ´ý£¬µÈLCD½²Èë¹¤×÷×´Ì¬
-  71   1              LCDInit(); //LCM³õÊ¼»¯
-  72   1              Delay5Ms(); //ÑÓÊ±Æ¬¿Ì(¿É²»Òª)
-  73   1              UartInit();
-  74   1              while(1)
-  75   1              {
-  76   2                      //LCDClear();
-  77   2                      //DisplayImage(tmp);//ÏÔÊ¾Í¼ÐÎ
-  78   2                      //Delay400Ms();
-  79   2                      //Delay400Ms();
-  80   2                      //Delay400Ms();
-  81   2                      //Delay400Ms();
-  82   2                      //Delay400Ms();
-  83   2                      //LCDClear();
-  84   2                      //DisplayListChar(0,1,uctech);  //ÏÔÊ¾×Ö¿âÖÐµÄÖÐÎÄÊý×Ö
-  85   2                      //DisplayListChar(0,2,net);             //ÏÔÊ¾×Ö¿âÖÐµÄÖÐÎÄÊý×Ö
-  86   2                      //DisplayListChar(0,3,temp_disp);               //ÏÔÊ¾×Ö¿âÖÐµÄÖÐÎÄ
-  87   2                      //DisplayListChar(0,4,qqDisplayListChar(0,4,qq);                //ÏÔÊ¾×Ö¿âÖÐµÄÖÐÎÄÊý×Ö
-  88   2                      //Delay400Ms();
-  89   2                      //Delay400Ms();
-  90   2                      //Delay400Ms();
-  91   2                      //Delay400Ms();
-  92   2                      //LCDFlash();   //ÉÁË¸Ð§¹û
-  93   2                      //}
-  94   2                      DisplayListChar(0,0,disp1);
-  95   2                      DisplayOneChar(0,2,slave1_temp_disp[0]);
-  96   2                      DisplayOneChar(1,2,slave1_temp_disp[1]);
-  97   2                      DisplayOneChar(2,2,slave1_temp_disp[2]);
-  98   2                      DisplayOneChar(3,2,slave1_temp_disp[3]);
-  99   2                      DisplayOneChar(4,2,slave1_hum_disp[0]);
- 100   2                      DisplayOneChar(5,2,slave1_hum_disp[1]);
- 101   2                      DisplayOneChar(6,2,slave1_s_disp[0]);
- 102   2                      DisplayOneChar(7,2,slave1_s_disp[1]);
- 103   2      
- 104   2                      DisplayOneChar(0,3,slave2_temp_disp[0]);
- 105   2                      DisplayOneChar(1,3,slave2_temp_disp[1]);
- 106   2                      DisplayOneChar(2,3,slave2_temp_disp[2]);
- 107   2                      DisplayOneChar(3,3,slave2_temp_disp[3]);
- 108   2                      //Delay400Ms();
- 109   2                      //Delay400Ms();
- 110   2                      //Delay400Ms();
- 111   2                      //Delay400Ms();
- 112   2                      //PutString(DataPackage);//¿Õ¸ñ20H,»Ø³µ0DH
- 113   2                      
- 114   2              }
- 115   1      }
- 116          
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 3   
+  64          uchar slave1_temp_disp[4]={'T','X','X','X'};
+  65          uchar slave2_temp_disp[4]={'T','X','X','X'};
+  66          uchar slave1_hum_disp[3]={'H','X','X'};
+  67          uchar slave2_hum_disp[3]={'H','X','X'};
+  68          uchar slave1_s_disp[2]={'S','X'};
+  69          uchar slave2_s_disp[2]={'S','X'};
+  70          
+  71          //uchar code disp1[]={"Î»ÖÃ01µÄ¼à¿ØÈçÏÂ"};
+  72          //uchar code disp2[]={"Î»ÖÃ02µÄ¼à¿ØÈçÏÂ"};
+  73          
+  74          /////////////////////////////////////////////////////////////////////////////////////////////
+  75          
+  76          void main(void)
+  77          {
+  78   1              //Delay400Ms(); //Æô¶¯µÈ´ý£¬µÈLCD½²Èë¹¤×÷×´Ì¬
+  79   1              LCDInit(); //LCM³õÊ¼»¯
+  80   1              Delay5Ms(); //ÑÓÊ±Æ¬¿Ì(¿É²»Òª)
+  81   1              UartInit();
+  82   1              Slave1En=1;
+  83   1              Slave2En=0;
+  84   1      
+  85   1              while(1)
+  86   1              {
+  87   2      
+  88   2                      WriteCommandLCD(0x80);     //80 90 88 98
+*** WARNING C209 IN LINE 88 OF DEMO.C: '_WriteCommandLCD': too few actual parameters
+  89   2                      WriteDataLCD(0x31);
+  90   2                      WriteCommandLCD(0x90);     //80 90 88 98
+*** WARNING C209 IN LINE 90 OF DEMO.C: '_WriteCommandLCD': too few actual parameters
+  91   2                      WriteDataLCD(slave1_temp_disp[0]);
+  92   2                      WriteDataLCD(':');
+  93   2                      WriteDataLCD(slave1_temp_disp[1]);
+  94   2                      WriteDataLCD(slave1_temp_disp[2]);
+  95   2                      WriteDataLCD('.');
+  96   2                      WriteDataLCD(slave1_temp_disp[3]);
+  97   2      
+  98   2      
+  99   2                      WriteDataLCD(' ');
+ 100   2                      WriteDataLCD(slave1_hum_disp[0]);
+ 101   2                      WriteDataLCD(':');
+ 102   2                      WriteDataLCD(slave1_hum_disp[1]);
+ 103   2                      WriteDataLCD(slave1_hum_disp[2]);
+ 104   2                      WriteDataLCD(' ');
+ 105   2                      WriteDataLCD(slave1_s_disp[0]);
+ 106   2                      WriteDataLCD(':');
+ 107   2                      WriteDataLCD(slave1_s_disp[1]);
+ 108   2      
+ 109   2                      
+ 110   2                      //DisplayListChar(0,3,disp2);
+ 111   2                      WriteCommandLCD(0x88);     //80 90 88 98
+*** WARNING C209 IN LINE 111 OF DEMO.C: '_WriteCommandLCD': too few actual parameters
+ 112   2                      WriteDataLCD(0x32);
+ 113   2                      WriteCommandLCD(0x98);     //80 90 88 98
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 3   
 
- 117          //Ð´Êý¾Ý
- 118          void WriteDataLCD(unsigned char WDLCD)
- 119          {
- 120   1              ReadStatusLCD(); //¼ì²âÃ¦ 
- 121   1              LCD_RS = 1;
- 122   1              LCD_RW = 0;
- 123   1              LCD_Data = WDLCD;
- 124   1              LCD_E = 1;
- 125   1              LCD_E = 1;
- 126   1              LCD_E = 1;
- 127   1              LCD_E = 0;
- 128   1      }
- 129          
- 130          //Ð´Ö¸Áî
- 131          void WriteCommandLCD(unsigned char WCLCD,BuysC) //BuysCÎª0Ê±ºöÂÔÃ¦¼ì²â
- 132          {
- 133   1              if (BuysC) ReadStatusLCD(); //¸ù¾ÝÐèÒª¼ì²âÃ¦ 
- 134   1              LCD_RS = 0;
- 135   1              LCD_RW = 0; 
- 136   1              LCD_Data = WCLCD;
- 137   1              LCD_E = 1; 
- 138   1              LCD_E = 1;
- 139   1              LCD_E = 1;
- 140   1              LCD_E = 0;  
- 141   1      }
- 142          
- 143          //¶ÁÊý¾Ý
- 144          unsigned char ReadDataLCD(void)
- 145          {
- 146   1              LCD_RS = 1; 
- 147   1              LCD_RW = 1;
- 148   1              LCD_E = 0;
- 149   1              LCD_E = 0;
- 150   1              LCD_E = 1;
- 151   1              return(LCD_Data);
- 152   1      }
- 153          
- 154          //¶Á×´Ì¬
- 155          unsigned char ReadStatusLCD(void)
- 156          {
- 157   1              LCD_Data = 0xFF; 
- 158   1              LCD_RS = 0;
- 159   1              LCD_RW = 1; 
- 160   1              LCD_E = 1;
- 161   1              while (LCD_Data & Busy); //¼ì²âÃ¦ÐÅºÅ
- 162   1              LCD_E = 0;
- 163   1              return(LCD_Data);
- 164   1      }
- 165          
- 166          void LCDInit(void) //LCM³õÊ¼»¯
- 167          {
- 168   1              WriteCommandLCD(0x30,1); //ÏÔÊ¾Ä£Ê½ÉèÖÃ,¿ªÊ¼ÒªÇóÃ¿´Î¼ì²âÃ¦ÐÅºÅ
- 169   1              WriteCommandLCD(0x01,1); //ÏÔÊ¾ÇåÆÁ
- 170   1              WriteCommandLCD(0x06,1); // ÏÔÊ¾¹â±êÒÆ¶¯ÉèÖÃ
- 171   1              WriteCommandLCD(0x0C,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
- 172   1      }
- 173          void LCDClear(void) //ÇåÆÁ
- 174          {
- 175   1              WriteCommandLCD(0x01,1); //ÏÔÊ¾ÇåÆÁ
- 176   1              WriteCommandLCD(0x34,1); // ÏÔÊ¾¹â±êÒÆ¶¯ÉèÖÃ
- 177   1              WriteCommandLCD(0x30,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
- 178   1      }
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 4   
+*** WARNING C209 IN LINE 113 OF DEMO.C: '_WriteCommandLCD': too few actual parameters
+ 114   2                      WriteDataLCD(slave2_temp_disp[0]);
+ 115   2                      WriteDataLCD(':');
+ 116   2                      WriteDataLCD(slave2_temp_disp[1]);
+ 117   2                      WriteDataLCD(slave2_temp_disp[2]);
+ 118   2                      WriteDataLCD('.');
+ 119   2                      WriteDataLCD(slave2_temp_disp[3]);
+ 120   2                      WriteDataLCD(' ');
+ 121   2                      WriteDataLCD(slave2_hum_disp[0]);
+ 122   2                      WriteDataLCD(':');
+ 123   2                      WriteDataLCD(slave2_hum_disp[1]);
+ 124   2                      WriteDataLCD(slave2_hum_disp[2]);
+ 125   2                      WriteDataLCD(' ');
+ 126   2                      WriteDataLCD(slave2_s_disp[0]);
+ 127   2                      WriteDataLCD(':');
+ 128   2                      WriteDataLCD(slave2_s_disp[1]);
+ 129   2      
+ 130   2              }
+ 131   1      }
+ 132          
+ 133          //Ð´Êý¾Ý
+ 134          void WriteDataLCD(unsigned char WDLCD)
+ 135          {
+ 136   1              ReadStatusLCD(); //¼ì²âÃ¦ 
+ 137   1              LCD_RS = 1;
+ 138   1              LCD_RW = 0;
+ 139   1              LCD_Data = WDLCD;
+ 140   1              LCD_E = 1;
+ 141   1              LCD_E = 1;
+ 142   1              LCD_E = 1;
+ 143   1              LCD_E = 0;
+ 144   1      }
+ 145          
+ 146          //Ð´Ö¸Áî
+ 147          void WriteCommandLCD(unsigned char WCLCD,BuysC) //BuysCÎª0Ê±ºöÂÔÃ¦¼ì²â
+ 148          {
+ 149   1              if (BuysC) ReadStatusLCD(); //¸ù¾ÝÐèÒª¼ì²âÃ¦ 
+ 150   1              LCD_RS = 0;
+ 151   1              LCD_RW = 0; 
+ 152   1              LCD_Data = WCLCD;
+ 153   1              LCD_E = 1; 
+ 154   1              LCD_E = 1;
+ 155   1              LCD_E = 1;
+ 156   1              LCD_E = 0;  
+ 157   1      }
+ 158          
+ 159          //¶ÁÊý¾Ý
+ 160          unsigned char ReadDataLCD(void)
+ 161          {
+ 162   1              LCD_RS = 1; 
+ 163   1              LCD_RW = 1;
+ 164   1              LCD_E = 0;
+ 165   1              LCD_E = 0;
+ 166   1              LCD_E = 1;
+ 167   1              return(LCD_Data);
+ 168   1      }
+ 169          
+ 170          //¶Á×´Ì¬
+ 171          unsigned char ReadStatusLCD(void)
+ 172          {
+ 173   1              LCD_Data = 0xFF; 
+ 174   1              LCD_RS = 0;
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 4   
 
- 179          void LCDFlash(void)     //ÉÁË¸Ð§¹û
- 180          {
- 181   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
- 182   1              Delay400Ms();
- 183   1              WriteCommandLCD(0x0c,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
- 184   1              Delay400Ms();
- 185   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
- 186   1              Delay400Ms();
- 187   1              WriteCommandLCD(0x0c,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
- 188   1              Delay400Ms();
- 189   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
- 190   1              Delay400Ms();
- 191   1      }
- 192          //°´Ö¸¶¨Î»ÖÃÏÔÊ¾Ò»¸ö×Ö·û
- 193          void DisplayOneChar(unsigned char X, unsigned char Y, unsigned char DData)
- 194          {
- 195   1              if(Y<1)
- 196   1                Y=1;
- 197   1              if(Y>4)
- 198   1                Y=4;
- 199   1                X &= 0x0F; //ÏÞÖÆX²»ÄÜ´óÓÚ16£¬Y²»ÄÜ´óÓÚ1
- 200   1              switch(Y){
- 201   2              case 1:X|=0X80;break;
- 202   2              case 2:X|=0X90;break;
- 203   2              case 3:X|=0X88;break;
- 204   2              case 4:X|=0X98;break;
- 205   2              }
- 206   1              WriteCommandLCD(X, 0); //ÕâÀï²»¼ì²âÃ¦ÐÅºÅ£¬·¢ËÍµØÖ·Âë
- 207   1              WriteDataLCD(DData);
- 208   1      }
- 209          
- 210          //°´Ö¸¶¨Î»ÖÃÏÔÊ¾Ò»´®×Ö·û
- 211          void DisplayListChar(unsigned char X, unsigned char Y, unsigned char code *DData)
- 212          {
- 213   1          unsigned char ListLength,X2;
- 214   1          ListLength = 0;
- 215   1          X2=X;
- 216   1          if(Y<1)
- 217   1                 Y=1;
- 218   1          if(Y>4)
- 219   1                 Y=4;
- 220   1          X &= 0x0F; //ÏÞÖÆX²»ÄÜ´óÓÚ16£¬YÔÚ1-4Ö®ÄÚ
- 221   1          switch(Y){
- 222   2                      case 1:X2|=0X80;break;  //¸ù¾ÝÐÐÊýÀ´Ñ¡ÔñÏàÓ¦µØÖ·
- 223   2                      case 2:X2|=0X90;break;
- 224   2                      case 3:X2|=0X88;break;
- 225   2                      case 4:X2|=0X98;break;
- 226   2              }
- 227   1        WriteCommandLCD(X2, 1); //·¢ËÍµØÖ·Âë
- 228   1        while (DData[ListLength]>=0x20) //Èôµ½´ï×Ö´®Î²ÔòÍË³ö
- 229   1        {
- 230   2           if (X <= 0x0F) //X×ø±êÓ¦Ð¡ÓÚ0xF
- 231   2           {
- 232   3                      WriteDataLCD(DData[ListLength]); //
- 233   3                      ListLength++;
- 234   3                      X++;
- 235   3                      Delay5Ms();
- 236   3          }
- 237   2        }
- 238   1      }
- 239          
- 240          //Í¼ÐÎÏÔÊ¾122*32
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 5   
+ 175   1              LCD_RW = 1; 
+ 176   1              LCD_E = 1;
+ 177   1              while (LCD_Data & Busy); //¼ì²âÃ¦ÐÅºÅ
+ 178   1              LCD_E = 0;
+ 179   1              return(LCD_Data);
+ 180   1      }
+ 181          
+ 182          void LCDInit(void) //LCM³õÊ¼»¯
+ 183          {
+ 184   1              WriteCommandLCD(0x30,1); //ÏÔÊ¾Ä£Ê½ÉèÖÃ,¿ªÊ¼ÒªÇóÃ¿´Î¼ì²âÃ¦ÐÅºÅ
+ 185   1              WriteCommandLCD(0x01,1); //ÏÔÊ¾ÇåÆÁ
+ 186   1              WriteCommandLCD(0x06,1); // ÏÔÊ¾¹â±êÒÆ¶¯ÉèÖÃ
+ 187   1              WriteCommandLCD(0x0C,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
+ 188   1      }
+ 189          void LCDClear(void) //ÇåÆÁ
+ 190          {
+ 191   1              WriteCommandLCD(0x01,1); //ÏÔÊ¾ÇåÆÁ
+ 192   1              WriteCommandLCD(0x34,1); // ÏÔÊ¾¹â±êÒÆ¶¯ÉèÖÃ
+ 193   1              WriteCommandLCD(0x30,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
+ 194   1      }
+ 195          void LCDFlash(void)     //ÉÁË¸Ð§¹û
+ 196          {
+ 197   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
+ 198   1              Delay400Ms();
+ 199   1              WriteCommandLCD(0x0c,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
+ 200   1              Delay400Ms();
+ 201   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
+ 202   1              Delay400Ms();
+ 203   1              WriteCommandLCD(0x0c,1); // ÏÔÊ¾¿ª¼°¹â±êÉèÖÃ
+ 204   1              Delay400Ms();
+ 205   1              WriteCommandLCD(0x08,1); //ÏÔÊ¾ÇåÆÁ
+ 206   1              Delay400Ms();
+ 207   1      }
+ 208          //°´Ö¸¶¨Î»ÖÃÏÔÊ¾Ò»¸ö×Ö·û
+ 209          void DisplayOneChar(unsigned char X, unsigned char Y, unsigned char DData)
+ 210          {
+ 211   1              if(Y<1)
+ 212   1                Y=1;
+ 213   1              if(Y>4)
+ 214   1                Y=4;
+ 215   1                X &= 0x0F; //ÏÞÖÆX²»ÄÜ´óÓÚ16£¬Y²»ÄÜ´óÓÚ1
+ 216   1              switch(Y){
+ 217   2              case 1:X|=0X80;break;
+ 218   2              case 2:X|=0X90;break;
+ 219   2              case 3:X|=0X88;break;
+ 220   2              case 4:X|=0X98;break;
+ 221   2              }
+ 222   1              WriteCommandLCD(X, 0); //ÕâÀï²»¼ì²âÃ¦ÐÅºÅ£¬·¢ËÍµØÖ·Âë
+ 223   1              WriteDataLCD(DData);
+ 224   1      }
+ 225          
+ 226          //°´Ö¸¶¨Î»ÖÃÏÔÊ¾Ò»´®×Ö·û
+ 227          void DisplayListChar(unsigned char X, unsigned char Y, unsigned char code *DData)
+ 228          {
+ 229   1          unsigned char ListLength,X2;
+ 230   1          ListLength = 0;
+ 231   1          X2=X;
+ 232   1          if(Y<1)
+ 233   1                 Y=1;
+ 234   1          if(Y>4)
+ 235   1                 Y=4;
+ 236   1          X &= 0x0F; //ÏÞÖÆX²»ÄÜ´óÓÚ16£¬YÔÚ1-4Ö®ÄÚ
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 5   
 
- 241          //void DisplayImage (unsigned char code *DData){
- 242          //      unsigned char x,y,i;
- 243          //      unsigned int tmp=0;
- 244          //      for(i=0;i<9;){          //·ÖÁ½ÆÁ£¬ÉÏ°ëÆÁºÍÏÂ°ëÆÁ£¬ÒòÎªÆðÊ¼µØÖ·²»Í¬£¬ÐèÒª·Ö¿ª
- 245          //      for(x=0;x<32;x++){                              //32ÐÐ
- 246          //              WriteCommandLCD(0x34,1);
- 247          //              WriteCommandLCD((0x80+x),1);//ÁÐµØÖ·
- 248          //              WriteCommandLCD((0x80+i),1);    //ÐÐµØÖ·£¬ÏÂ°ëÆÁ£¬¼´µÚÈýÐÐµØÖ·0X88
- 249          //              WriteCommandLCD(0x30,1);                
- 250          //              for(y=0;y<16;y++)       
- 251          //                      WriteDataLCD(DData[tmp+y]);//¶ÁÈ¡Êý¾ÝÐ´ÈëLCD
- 252          //              tmp+=16;                
- 253          //      }
- 254          //      i+=8;
- 255          //      }
- 256          //      WriteCommandLCD(0x36,1);        //À©³ä¹¦ÄÜÉè¶¨
- 257          //      WriteCommandLCD(0x30,1);
- 258          //}
- 259          
- 260          //5msÑÓÊ±
- 261          void Delay5Ms(void)
- 262          {
- 263   1       unsigned int TempCyc = 5552;
- 264   1       while(TempCyc--);
- 265   1      }
- 266          
- 267          //400msÑÓÊ±
- 268          void Delay400Ms(void)
- 269          {
- 270   1       unsigned char TempCycA = 5;
- 271   1       unsigned int TempCycB;
- 272   1       while(TempCycA--)
- 273   1       {
- 274   2        TempCycB=7269;
- 275   2        while(TempCycB--);
- 276   2       };
- 277   1      }
- 278          
- 279          void UartInit()
- 280          {
- 281   1              SCON=0x50;   //´®¿Ú·½Ê½1£¬Ê¹ÄÜ½ÓÊÕ
- 282   1              TMOD=0x20;  //¶¨Ê±Æ÷1¹¤×÷·½Ê½2£¨8Î»×Ô¶¯ÖØ×°³õÖµ£©
- 283   1              
- 284   1              TH1=0xfa;    //¼ÆÊýÆ÷³õÊ¼ÖµÉèÖÃ 9600bps
- 285   1              TL1=0xfa;  
- 286   1              PCON|=0x80;  //¶¨ÒåPCON¼Ä´æÆ÷ÖÐµÄSMOD=1,²¨ÌØÂÊ¼Ó±¶
- 287   1              
- 288   1              TR1=1;
- 289   1              TI=0;
- 290   1              RI=0;
- 291   1              //PS=1;   //Ìá¸ß´®¿ÚÖÐ¶ÏÓÅÏÈ¼¶
- 292   1              ES=1;  //¿ªÆô´®¿ÚÖÐ¶ÏÊ¹ÄÜ
- 293   1              EA=1;
- 294   1      }
- 295          //
- 296          //void Txd_Data(char Data)    //´®¿Ú·¢ËÍÊý¾Ý
- 297          //{
- 298          //      SBUF = Data;
- 299          //      while(!TI);
- 300          //      TI=0;
- 301          //}
- 302          
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 6   
+ 237   1          switch(Y){
+ 238   2                      case 1:X2|=0X80;break;  //¸ù¾ÝÐÐÊýÀ´Ñ¡ÔñÏàÓ¦µØÖ·
+ 239   2                      case 2:X2|=0X90;break;
+ 240   2                      case 3:X2|=0X88;break;
+ 241   2                      case 4:X2|=0X98;break;
+ 242   2              }
+ 243   1        WriteCommandLCD(X2, 1); //·¢ËÍµØÖ·Âë
+ 244   1        while (DData[ListLength]>=0x20) //Èôµ½´ï×Ö´®Î²ÔòÍË³ö
+ 245   1        {
+ 246   2           if (X <= 0x0F) //X×ø±êÓ¦Ð¡ÓÚ0xF
+ 247   2           {
+ 248   3                      WriteDataLCD(DData[ListLength]); //
+ 249   3                      ListLength++;
+ 250   3                      X++;
+ 251   3                      Delay5Ms();
+ 252   3          }
+ 253   2        }
+ 254   1      }
+ 255          
+ 256          //Í¼ÐÎÏÔÊ¾122*32
+ 257          //void DisplayImage (unsigned char code *DData){
+ 258          //      unsigned char x,y,i;
+ 259          //      unsigned int tmp=0;
+ 260          //      for(i=0;i<9;){          //·ÖÁ½ÆÁ£¬ÉÏ°ëÆÁºÍÏÂ°ëÆÁ£¬ÒòÎªÆðÊ¼µØÖ·²»Í¬£¬ÐèÒª·Ö¿ª
+ 261          //      for(x=0;x<32;x++){                              //32ÐÐ
+ 262          //              WriteCommandLCD(0x34,1);
+ 263          //              WriteCommandLCD((0x80+x),1);//ÁÐµØÖ·
+ 264          //              WriteCommandLCD((0x80+i),1);    //ÐÐµØÖ·£¬ÏÂ°ëÆÁ£¬¼´µÚÈýÐÐµØÖ·0X88
+ 265          //              WriteCommandLCD(0x30,1);                
+ 266          //              for(y=0;y<16;y++)       
+ 267          //                      WriteDataLCD(DData[tmp+y]);//¶ÁÈ¡Êý¾ÝÐ´ÈëLCD
+ 268          //              tmp+=16;                
+ 269          //      }
+ 270          //      i+=8;
+ 271          //      }
+ 272          //      WriteCommandLCD(0x36,1);        //À©³ä¹¦ÄÜÉè¶¨
+ 273          //      WriteCommandLCD(0x30,1);
+ 274          //}
+ 275          
+ 276          //5msÑÓÊ±
+ 277          void Delay5Ms(void)
+ 278          {
+ 279   1       unsigned int TempCyc = 5552;
+ 280   1       while(TempCyc--);
+ 281   1      }
+ 282          
+ 283          //400msÑÓÊ±
+ 284          void Delay400Ms(void)
+ 285          {
+ 286   1       unsigned char TempCycA = 5;
+ 287   1       unsigned int TempCycB;
+ 288   1       while(TempCycA--)
+ 289   1       {
+ 290   2        TempCycB=7269;
+ 291   2        while(TempCycB--);
+ 292   2       };
+ 293   1      }
+ 294          
+ 295          void UartInit()
+ 296          {
+ 297   1              SCON=0x50;   //´®¿Ú·½Ê½1£¬Ê¹ÄÜ½ÓÊÕ
+ 298   1              TMOD=0x20;  //¶¨Ê±Æ÷1¹¤×÷·½Ê½2£¨8Î»×Ô¶¯ÖØ×°³õÖµ£©
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 6   
 
- 303          //´®¿Ú·¢ËÍº¯Êý
- 304          void PutString(unsigned char *TXStr)  
- 305          {                
- 306   1          ES=0;     
- 307   1          while(*TXStr!=0) 
- 308   1          {                      
- 309   2              SBUF=*TXStr;
- 310   2              while(TI==0);
- 311   2              TI=0;    
- 312   2              TXStr++;
- 313   2          }
- 314   1          ES=1; 
- 315   1      }                                                     
- 316          //´®¿Ú½ÓÊÕº¯Êý
- 317          bit ReceiveString()    
- 318          {
- 319   1          char * RecStr=buf_string;
- 320   1          char num=0;
- 321   1          unsigned char count=0;
- 322   1          loop:    
- 323   1                  *RecStr=SBUF;
- 324   1                  count=0;
- 325   1                  RI=0;    
- 326   1                  if(num < DataPacketLength -1)  //Êý¾Ý°ü³¤¶ÈÎª8¸ö×Ö·û,³¢ÊÔÁ¬Ðø½ÓÊÕ8¸ö×Ö·û
- 327   1                  {
- 328   2                      num++;
- 329   2                      RecStr++;    
- 330   2                      while(!RI)
- 331   2                      {
- 332   3                          count++;
- 333   3                          if(count>130)return 0;    //½ÓÊÕÊý¾ÝµÈ´ýÑÓ³Ù£¬µÈ´ýÊ±¼äÌ«¾Ã»áµ¼ÖÂCPUÔËËãÏÐÖÃ£¬Ì«¶Ì»á³öÏÖ"Êý¾Ý°
-             -ü±»·Ö¸î",Ä¬ÈÏcount=130
- 334   3                      }
- 335   2                      goto loop;
- 336   2                  }
- 337   1          return 1;
- 338   1      }
- 339          ////±È½ÏÖ¸ÁîÍ·²¿
- 340          //bit CompareCMD_head(char CMD_head[])    
- 341          //{
- 342          //     unsigned char CharNum;
- 343          //     for(CharNum=0;CharNum<1;CharNum++)  //Ö¸Áî³¤¶ÈÎª8¸ö×Ö·û
- 344          //     {
- 345          //         if(!(buf_string[CharNum+3]==CMD_head[CharNum]))
- 346          //         {
- 347          //             return 0;  //Ö¸ÁîÍ·²¿Æ¥ÅäÊ§°Ü
- 348          //         }
- 349          //     }
- 350          //     return 1;        //Ö¸ÁîÍ·²¿Æ¥Åä³É¹¦
- 351          //}
- 352          ////±È½ÏÖ¸ÁîÎ²²¿(start:´ÓÄÄÀï¿ªÊ¼±È½Ï£¬quality:±È½Ï¶àÉÙ¸ö×Ö·û£¬CMD_tail[]£ºÒª±È½ÏµÄ×Ö·û´®)
- 353          //bit CompareCMD_tail(unsigned char start,unsigned char quality,char CMD_tail[]) 
- 354          //{
- 355          //     unsigned char CharNum;
- 356          //     for(CharNum=0;CharNum<quality;CharNum++)
- 357          //     {
- 358          //         if(!(buf_string[start+CharNum]==CMD_tail[CharNum]))
- 359          //         {
- 360          //             return 0; 
- 361          //         }
- 362          //     }
- 363          //     return 1;
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 7   
+ 299   1              
+ 300   1              TH1=0xfd;    //¼ÆÊýÆ÷³õÊ¼ÖµÉèÖÃ 9600bps
+ 301   1              TL1=0xfa;  
+ 302   1              //PCON|=0x80;  //¶¨ÒåPCON¼Ä´æÆ÷ÖÐµÄSMOD=1,²¨ÌØÂÊ¼Ó±¶
+ 303   1              SM0=0;
+ 304   1              SM1=1;
+ 305   1      
+ 306   1              TR1=1;
+ 307   1              TI=0;
+ 308   1              RI=0;
+ 309   1              //PS=1;   //Ìá¸ß´®¿ÚÖÐ¶ÏÓÅÏÈ¼¶
+ 310   1              ES=1;  //¿ªÆô´®¿ÚÖÐ¶ÏÊ¹ÄÜ
+ 311   1              EA=1;
+ 312   1      //    SCON=0x50; //´®¿Ú¹¤×÷·½Ê½1£¬8Î»UART£¬²¨ÌØÂÊ¿É±ä  
+ 313   1      //      TH2=0xFF;           
+ 314   1      //      TL2=0xFD;    //²¨ÌØÂÊ:115200 ¾§Õñ=11.0592MHz 
+ 315   1      //      RCAP2H=0xFF;   
+ 316   1      //      RCAP2L=0xFD; //16Î»×Ô¶¯ÔÙ×°ÈëÖµ
+ 317   1      //      
+ 318   1      //      TCLK=1;   
+ 319   1      //      RCLK=1;   
+ 320   1      //      C_T2=0;   
+ 321   1      //      EXEN2=0; //²¨ÌØÂÊ·¢ÉúÆ÷¹¤×÷·½Ê½
+ 322   1      //
+ 323   1      //    TR2=1 ; //¶¨Ê±Æ÷2¿ªÊ¼            //
+ 324   1      //    TI = 1;
+ 325   1      //
+ 326   1      //    REN=1;       //Ê¹ÄÜ´®¿ÚÔÊÐí½ÓÊÕ
+ 327   1      //    SM0=0;      //¹¤×÷ÔÚ´®¿ÚµÄ¹¤×÷·½Ê½1
+ 328   1      //    SM1=1;
+ 329   1      //    ES=1;       //´®¿ÚÖÐ¶Ï¹Ø±Õ£¬´ý³õÊ¼»¯ºóÔÙ´ò¿ª
+ 330   1      //    EA=1;       //×ÜÖÐ¶Ï´ò¿ª  
+ 331   1      }
+ 332          //
+ 333          //void Txd_Data(char Data)    //´®¿Ú·¢ËÍÊý¾Ý
+ 334          //{
+ 335          //      SBUF = Data;
+ 336          //      while(!TI);
+ 337          //      TI=0;
+ 338          //}
+ 339          
+ 340          //´®¿Ú·¢ËÍº¯Êý
+ 341          //void PutString(unsigned char *TXStr)  
+ 342          //{                
+ 343          //    ES=0;     
+ 344          //    while(*TXStr!=0) 
+ 345          //    {                      
+ 346          //        SBUF=*TXStr;
+ 347          //        while(TI==0);
+ 348          //        TI=0;    
+ 349          //        TXStr++;
+ 350          //    }
+ 351          //    ES=1; 
+ 352          //}                                                     
+ 353          //´®¿Ú½ÓÊÕº¯Êý
+ 354          bit ReceiveString()    
+ 355          {
+ 356   1          char * RecStr=buf_string;
+ 357   1          char num=0;
+ 358   1          unsigned char count=0;
+ 359   1          loop:    
+ 360   1                  *RecStr=SBUF;
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 7   
 
- 364          // }
- 365          
- 366          bit Deal_UART_RecData()   //´¦Àí´®¿Ú½ÓÊÕÊý¾Ý°üº¯Êý£¨³É¹¦´¦ÀíÊý¾Ý°üÔò·µ»Ø1£¬·ñÔò·µ»Ø0£©
- 367           {
- 368   1           //PutString(buf_string);
- 369   1           if(buf_string[0]==datapackage_headflag&&buf_string[DataPacketLength -1]=='#')  //½øÐÐÊý¾Ý°üÍ·Î²±ê¼ÇÑé
+ 361   1                  count=0;
+ 362   1                  RI=0;    
+ 363   1                  if(num < DataPacketLength -1)  //Êý¾Ý°ü³¤¶ÈÎª8¸ö×Ö·û,³¢ÊÔÁ¬Ðø½ÓÊÕ8¸ö×Ö·û
+ 364   1                  {
+ 365   2                      num++;
+ 366   2                      RecStr++;    
+ 367   2                      while(!RI);
+ 368   2                      {
+ 369   3                         count++;
+ 370   3                         if(count>130)return 0;    //½ÓÊÕÊý¾ÝµÈ´ýÑÓ³Ù£¬µÈ´ýÊ±¼äÌ«¾Ã»áµ¼ÖÂCPUÔËËãÏÐÖÃ£¬Ì«¶Ì»á³öÏÖ"Êý¾Ý°ü
+             -±»·Ö¸î",Ä¬ÈÏcount=130
+ 371   3                      }
+ 372   2                      goto loop;
+ 373   2                  }
+ 374   1          return 1;
+ 375   1      }
+ 376          ////±È½ÏÖ¸ÁîÍ·²¿
+ 377          //bit CompareCMD_head(char CMD_head[])    
+ 378          //{
+ 379          //     unsigned char CharNum;
+ 380          //     for(CharNum=0;CharNum<1;CharNum++)  //Ö¸Áî³¤¶ÈÎª8¸ö×Ö·û
+ 381          //     {
+ 382          //         if(!(buf_string[CharNum+3]==CMD_head[CharNum]))
+ 383          //         {
+ 384          //             return 0;  //Ö¸ÁîÍ·²¿Æ¥ÅäÊ§°Ü
+ 385          //         }
+ 386          //     }
+ 387          //     return 1;        //Ö¸ÁîÍ·²¿Æ¥Åä³É¹¦
+ 388          //}
+ 389          ////±È½ÏÖ¸ÁîÎ²²¿(start:´ÓÄÄÀï¿ªÊ¼±È½Ï£¬quality:±È½Ï¶àÉÙ¸ö×Ö·û£¬CMD_tail[]£ºÒª±È½ÏµÄ×Ö·û´®)
+ 390          //bit CompareCMD_tail(unsigned char start,unsigned char quality,char CMD_tail[]) 
+ 391          //{
+ 392          //     unsigned char CharNum;
+ 393          //     for(CharNum=0;CharNum<quality;CharNum++)
+ 394          //     {
+ 395          //         if(!(buf_string[start+CharNum]==CMD_tail[CharNum]))
+ 396          //         {
+ 397          //             return 0; 
+ 398          //         }
+ 399          //     }
+ 400          //     return 1;
+ 401          // }
+ 402          
+ 403          bit Deal_UART_RecData()   //´¦Àí´®¿Ú½ÓÊÕÊý¾Ý°üº¯Êý£¨³É¹¦´¦ÀíÊý¾Ý°üÔò·µ»Ø1£¬·ñÔò·µ»Ø0£©
+ 404           {
+ 405   1           //PutString(buf_string);
+ 406   1           if(buf_string[0]==datapackage_headflag&&buf_string[DataPacketLength -1]=='#')  //½øÐÐÊý¾Ý°üÍ·Î²±ê¼ÇÑé
              -Ö¤
- 370   1           {        
- 371   2               switch(buf_string[1])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ1Î»Êý×Ö
- 372   2               {
- 373   3                   case '1':
- 374   3                       switch(buf_string[2])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êý×Ö
- 375   3                       {
- 376   4                           case '_':
- 377   4                               if(buf_string[3]=='T')    //ÅÐ¶ÏÖ¸ÁîÍ·²¿ÊÇ·ñÎª'T'
- 378   4                               {
- 379   5                                       //temp =  buf_string[4]*100+buf_string[5]*10+buf_string[6]; 
- 380   5                                      slave1_temp_disp[1]=buf_string[4];
- 381   5                                                              slave1_temp_disp[2]=buf_string[5];
- 382   5                                                              slave1_temp_disp[3]=buf_string[6];
- 383   5                                                       }
- 384   4                               if(buf_string[7]=='H')  
- 385   4                               {
- 386   5                                   slave1_hum_disp[1]= buf_string[8]; 
- 387   5                                                               slave1_hum_disp[2]= buf_string[9];           
- 388   5                                   
- 389   5                               }
- 390   4                               if(buf_string[10]=='S')  
- 391   4                               {
- 392   5                                   slave1_s_disp[1]= buf_string[11]; 
- 393   5                                   
- 394   5                               }
- 395   4                               return 0;
- 396   4                           
- 397   4                           default:
- 398   4                               return 0;
- 399   4                       }
- 400   3      
- 401   3                               case '2':
- 402   3                       switch(buf_string[2])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êý×Ö
- 403   3                       {
- 404   4                           case '_':
- 405   4                               if(buf_string[3]=='T')    //ÅÐ¶ÏÖ¸ÁîÍ·²¿ÊÇ·ñÎª'T'
- 406   4                               {
- 407   5                                       //temp =  buf_string[4]*100+buf_string[5]*10+buf_string[6]; 
- 408   5                                      slave2_temp_disp[1]=buf_string[4];
- 409   5                                                              slave2_temp_disp[2]=buf_string[5];
- 410   5                                                              slave2_temp_disp[3]=buf_string[6];
- 411   5                                                       }
- 412   4                               if(buf_string[3]=='H')  
- 413   4                               {
- 414   5                                               
- 415   5                                   
- 416   5                               }
- 417   4                               if(buf_string[3]=='Q')  
- 418   4                               {
- 419   5                                   
- 420   5                                   
- 421   5                               }
- 422   4                               if(buf_string[3]=='W')  
- 423   4                               {
- 424   5                                   
-C51 COMPILER V9.00   DEMO                                                                  03/12/2019 18:48:39 PAGE 8   
+ 407   1           {        
+ 408   2               switch(buf_string[1])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ1Î»Êý×Ö
+ 409   2               {
+ 410   3                   case '1':
+ 411   3                                      {
+ 412   4                       switch(buf_string[2])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êý×Ö
+ 413   4                       {
+ 414   5                           case '_':
+ 415   5                               if(buf_string[3]=='T')    //ÅÐ¶ÏÖ¸ÁîÍ·²¿ÊÇ·ñÎª'T'
+ 416   5                               {
+ 417   6                                       //temp =  buf_string[4]*100+buf_string[5]*10+buf_string[6]; 
+ 418   6                                      slave1_temp_disp[1]=buf_string[4];
+ 419   6                                                              slave1_temp_disp[2]=buf_string[5];
+ 420   6                                                              slave1_temp_disp[3]=buf_string[6];
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 8   
 
- 425   5                                   
- 426   5                               }
- 427   4                               return 0;
- 428   4                           
- 429   4                           default:
- 430   4                               return 0;
- 431   4                       }
- 432   3                   default:
- 433   3                       return 0;
- 434   3               }
- 435   2           }
- 436   1           return 0;
- 437   1       }
- 438          void ser() interrupt 4          //´®¿ÚÖÐ¶Ï
- 439          {
- 440   1              if(ReceiveString())    
- 441   1          {
- 442   2              //Êý¾Ý°ü³¤¶ÈÕýÈ·ÔòÖ´ÐÐÒÔÏÂ´úÂë
- 443   2              Deal_UART_RecData();   
- 444   2          }
- 445   1          else
- 446   1          {
- 447   2              //Êý¾Ý°ü³¤¶È´íÎóÔòÖ´ÐÐÒÔÏÂ´úÂë
- 448   2              //LED1=~LED1;                
- 449   2          }
- 450   1          RI=0;  //½ÓÊÕ²¢´¦ÀíÒ»´ÎÊý¾Ýºó°Ñ½ÓÊÕÖÐ¶Ï±êÖ¾Çå³ýÒ»ÏÂ£¬¾Ü¾øÏìÓ¦ÔÚÖÐ¶Ï½ÓÊÕÃ¦µÄÊ±ºò·¢À´µÄÇëÇó
- 451   1      }
- 452          
+ 421   6                                                       }
+ 422   5                               if(buf_string[7]=='H')  
+ 423   5                               {
+ 424   6                                   slave1_hum_disp[1]= buf_string[8]; 
+ 425   6                                                               slave1_hum_disp[2]= buf_string[9];           
+ 426   6                                   
+ 427   6                               }
+ 428   5                               if(buf_string[10]=='S')  
+ 429   5                               {
+ 430   6                                   slave1_s_disp[1]= buf_string[11]; 
+ 431   6                                   
+ 432   6                               }
+ 433   5                                                       Slave1En=0;
+ 434   5                                               Slave2En=1;
+ 435   5                               return 0;
+ 436   5                           default:
+ 437   5                               return 0;
+ 438   5                       }
+ 439   4                                       
+ 440   4                                       }
+ 441   3                               case '2':
+ 442   3                               {
+ 443   4                       switch(buf_string[2])        //Ê¶±ð·¢ËÍÕßÉè±¸IDµÄµÚ2Î»Êý×Ö
+ 444   4                       {
+ 445   5                           case '_':
+ 446   5                               if(buf_string[3]=='T')    //ÅÐ¶ÏÖ¸ÁîÍ·²¿ÊÇ·ñÎª'T'
+ 447   5                               {
+ 448   6                                      slave2_temp_disp[1]=buf_string[4];
+ 449   6                                                              slave2_temp_disp[2]=buf_string[5];
+ 450   6                                                              slave2_temp_disp[3]=buf_string[6];
+ 451   6                                                       }
+ 452   5                               if(buf_string[7]=='H')  
+ 453   5                               {
+ 454   6                                   slave2_hum_disp[1]= buf_string[8]; 
+ 455   6                                                               slave2_hum_disp[2]= buf_string[9];             
+ 456   6                                   
+ 457   6                               }
+ 458   5                               if(buf_string[10]=='S')  
+ 459   5                               {
+ 460   6                                  slave2_s_disp[1]= buf_string[11];  
+ 461   6                               }
+ 462   5                                                       Slave1En=1;
+ 463   5                                               Slave2En=0;
+ 464   5                               return 0;
+ 465   5                           
+ 466   5                           default:
+ 467   5                               return 0;
+ 468   5                       }
+ 469   4                                        
+ 470   4                              }         
+ 471   3                   default:
+ 472   3                       return 0;
+ 473   3               }
+ 474   2           }
+ 475   1           return 0;
+ 476   1       }
+ 477          void ser() interrupt 4          //´®¿ÚÖÐ¶Ï
+ 478          {
+ 479   1              if(ReceiveString())    
+ 480   1          {
+ 481   2              //Êý¾Ý°ü³¤¶ÈÕýÈ·ÔòÖ´ÐÐÒÔÏÂ´úÂë
+ 482   2              Deal_UART_RecData();   
+C51 COMPILER V9.00   DEMO                                                                  05/24/2019 12:04:22 PAGE 9   
+
+ 483   2          }
+ 484   1          else
+ 485   1          {
+ 486   2              //Êý¾Ý°ü³¤¶È´íÎóÔòÖ´ÐÐÒÔÏÂ´úÂë
+ 487   2              //LED1=~LED1;                
+ 488   2          }
+ 489   1          RI=0;  //½ÓÊÕ²¢´¦ÀíÒ»´ÎÊý¾Ýºó°Ñ½ÓÊÕÖÐ¶Ï±êÖ¾Çå³ýÒ»ÏÂ£¬¾Ü¾øÏìÓ¦ÔÚÖÐ¶Ï½ÓÊÕÃ¦µÄÊ±ºò·¢À´µÄÇëÇó
+ 490   1      }
+ 491          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    773    ----
-   CONSTANT SIZE    =     17    ----
+   CODE SIZE        =    839    ----
+   CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =     46       7
@@ -489,4 +534,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  4 WARNING(S),  0 ERROR(S)

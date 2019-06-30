@@ -18,11 +18,10 @@ typedef double         F64;      /* double precision floating point variable (64
 
 sbit P2_0= P1^0 ; //DHT11
 
-sbit SM= P1^1 ; //烟雾传感器
+sbit SM= P1^1 ; //烟雾传感器	
 sbit MasterEn =P1^3;
-sbit SpeakerEn=P1^4;
-uchar En=0;
-//sbit Speaker= P1^6 ; //烟雾传感器
+sbit SpeakerEn =P1^4;
+
 sbit LCD_RS=P3^5;//LCD定义引脚
 sbit LCD_RW=P3^6;
 sbit LCD_E=P3^7;
@@ -63,7 +62,7 @@ void Txd_Data(char Data);
 */
 #define DataPacketLength 13
 
-#define deviceID '1'        //用于串口通信时，定义本地设备ID的第1位
+#define deviceID '2'        //用于串口通信时，定义本地设备ID的第1位
 #define datapackage_headflag 'A' //用于串口通信时，定义数据包头部的验证标记
 uchar buf_string[DataPacketLength];  //定义数据包长度为DataPacketLength个字符
 uchar DataPackage[DataPacketLength]={datapackage_headflag,deviceID,'_','T','X','X','X','H','X','X','S','X','#'};
@@ -94,14 +93,16 @@ void Delay(U16 j);
 void Delay_10us(void);
 void RH(void);
 
+//unsigned char code uctech[] = {"ic2012.taobao.co"};
+//unsigned char code net[] = {"Happy every day!"};
+
 void main(void)
 {
- //Delay400Ms(); //启动等待，等LCD讲入工作状态
+ Delay400Ms(); //启动等待，等LCD讲入工作状态
  LCDInit(); //LCM初始化
  UartInit();
  Delay5Ms(); //延时片刻(可不要)
-
- //Speaker=1;
+ SpeakerEn=1;
  while(1){
 	//Delay400Ms();
 	//Delay400Ms();
@@ -114,15 +115,13 @@ void main(void)
 	if(SM==0)
 	{
 		 Delay5Ms();
-		 if(SM==0)//{
+		 if(SM==0)
 		 SSM = 0x31;
-		 //Speaker=0;}
 	
 	}else
 	 SSM = 0x30;
 
-	 
-	DataPackage[3] =  'T';
+    DataPackage[3] =  'T';
 	DataPackage[4] =  U8T_data_H%100/10+0x30;
 	DataPackage[5] =  U8T_data_H%10+0x30;
 	DataPackage[6] =  U8T_data_L%10+0x30;
@@ -135,9 +134,7 @@ void main(void)
     DataPackage[11]=  SSM;
 	if((U8T_data_H%100)>45||SSM==0x31||U8RH_data_H<20) SpeakerEn=0;
 	else  SpeakerEn=1;
-
-	if(MasterEn)En=1;
-	if(En==1)PutString(DataPackage);
+	if(MasterEn)PutString(DataPackage);
 
     WriteCommandLCD(0x80);
 	WriteDataLCD('S');
@@ -146,7 +143,7 @@ void main(void)
 	WriteDataLCD('e');
 	WriteDataLCD(':');
 	WriteDataLCD('0');
-	WriteDataLCD('1');
+	WriteDataLCD('2');
 
     WriteCommandLCD(0xC0);
 	WriteDataLCD('T');
@@ -166,6 +163,7 @@ void main(void)
 	WriteDataLCD(SSM);
     
 	
+
 	//Delay(10000);
  
  
@@ -434,9 +432,8 @@ void PutString(unsigned char *TXStr)
         TXStr++;
     }
     ES=1; 
-	En=0;
 }                                                     
-////串口接收函数
+//串口接收函数
 //bit ReceiveString()    
 //{
 //    char * RecStr=buf_string;
@@ -485,7 +482,7 @@ void PutString(unsigned char *TXStr)
 //     }
 //     return 1;
 // }
-//
+
 //bit Deal_UART_RecData()   //处理串口接收数据包函数（成功处理数据包则返回1，否则返回0）
 // {
 //     //PutString(buf_string);

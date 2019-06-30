@@ -177,10 +177,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>1</Focus>
-      <ColumnNumber>22</ColumnNumber>
+      <ColumnNumber>70</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>523</TopLine>
-      <CurrentLine>523</CurrentLine>
+      <TopLine>51</TopLine>
+      <CurrentLine>69</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\1602.c</PathWithFileName>
       <FilenameWithoutPath>1602.c</FilenameWithoutPath>
@@ -1551,9 +1551,9 @@
       <Documents>
         <Doc>
           <Name>.\1602.c</Name>
-          <ColumnNumber>22</ColumnNumber>
-          <TopLine>523</TopLine>
-          <CurrentLine>523</CurrentLine>
+          <ColumnNumber>70</ColumnNumber>
+          <TopLine>51</TopLine>
+          <CurrentLine>69</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

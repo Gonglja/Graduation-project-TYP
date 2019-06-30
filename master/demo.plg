@@ -3,7 +3,133 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-D:\Data\git\Graduation project(teng)\master\demo.uvproj
+E:\3.Graduation\2.others\2.Tengyupeng\Ö÷Òª´úÂë\master\demo.uvproj
 Project File Date:  03/10/2019
 
 <h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(87): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(89): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(110): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(112): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1059
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(87): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(89): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(110): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(112): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1061
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(89): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(91): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(112): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(114): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1063
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(90): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(92): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(113): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(115): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1065
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(90): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(92): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(113): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(115): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1065
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling demo.c...
+DEMO.C(88): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(90): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(111): warning C209: '_WriteCommandLCD': too few actual parameters
+DEMO.C(113): warning C209: '_WriteCommandLCD': too few actual parameters
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?READDATALCD?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDCLEAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCDFLASH?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYONECHAR?DEMO
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DISPLAYLISTCHAR?DEMO
+Program Size: data=61.0 xdata=0 code=1055
+creating hex file from "demo"...
+"demo" - 0 Error(s), 9 Warning(s).
